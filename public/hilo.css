@@ -1,0 +1,314 @@
+/* ==================================================
+   HILO - ASISTENTE VIRTUAL
+   Este archivo solo controla al personaje y su panel.
+   ================================================== */
+
+/* ── Acceso desde la barra y personaje flotante ── */
+.nav-hilo{
+  border:1px solid rgba(23,58,49,.24); border-radius:999px; background:var(--yellow); color:var(--ink);
+  padding:8px 14px; font:inherit; font-weight:900;
+  cursor:pointer
+}
+.nav-hilo:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 18px rgba(23,58,49,.14)
+}
+.virtual-assistant{
+  position:fixed; right:18px; bottom:12px; z-index:70;
+  font-family:'DM Sans',Arial,sans-serif
+}
+.assistant-character{
+  position:relative; width:142px; height:174px; display:grid; align-items:end; justify-items:center;
+  transition:.22s
+}
+.assistant-toggle{
+  position:relative; width:136px; height:166px; padding:0; border:0; background:transparent; display:grid;
+  align-items:end; justify-items:center;
+  filter:drop-shadow(0 14px 14px rgba(23,58,49,.22))
+}
+.assistant-character-img{
+  display:block; width:118px; height:152px; object-fit:contain; object-position:center bottom;
+  transform-origin:center bottom; animation:hilo-float 3.4s ease-in-out infinite;
+  transition:.2s
+}
+.assistant-toggle:hover .assistant-character-img{
+  transform:translateY(-5px) scale(1.04);
+  filter:saturate(1.08)
+}
+.assistant-character-img.is-changing,.hilo-avatar.is-changing{
+  animation:hilo-pose-change .38s ease
+}
+.assistant-name{
+  position:absolute; left:50%; bottom:0; transform:translateX(-50%); white-space:nowrap; padding:7px 13px;
+  border-radius:999px; background:var(--ink); color:white; font-size:11px; font-weight:900;
+  box-shadow:0 8px 18px rgba(23,58,49,.25)
+}
+.assistant-bubble{
+  position:absolute; right:104px; bottom:118px; width:230px; padding:13px 16px;
+  border:1px solid rgba(23,58,49,.15); border-radius:22px; background:#fffdf8; color:var(--ink); font-size:13px;
+  font-weight:800; line-height:1.35; box-shadow:0 14px 34px rgba(23,58,49,.18); z-index:2;
+  transition:.2s
+}
+.assistant-bubble:after{
+  content:''; position:absolute; right:-11px; bottom:22px; width:20px; height:20px; background:#fffdf8;
+  border-top:1px solid rgba(23,58,49,.15); border-right:1px solid rgba(23,58,49,.15);
+  transform:rotate(45deg)
+}
+.assistant-bubble.is-hidden{
+  opacity:0; pointer-events:none;
+  transform:translateY(8px) scale(.96)
+}
+.assistant-open .assistant-character{
+  opacity:0; pointer-events:none;
+  transform:translateY(18px) scale(.92)
+}
+
+/* ── Panel de conversación ── */
+.assistant-panel{
+  position:fixed; right:18px; bottom:18px; width:min(510px,calc(100vw - 36px));
+  height:min(730px,calc(100dvh - 36px)); display:grid; grid-template-rows:auto auto 1fr auto;
+  background:#fffaf0; border:1px solid rgba(23,58,49,.14); border-radius:32px;
+  box-shadow:0 30px 90px rgba(23,58,49,.32);
+  overflow:hidden
+}
+
+/* ── Toolbar ── */
+.hilo-toolbar{
+  min-height:56px; display:flex; align-items:center; gap:13px; padding:12px 62px 12px 20px;
+  background:var(--ink); color:white;
+  position:relative
+}
+.hilo-toolbar-title{
+  font-size:12px; font-weight:700; letter-spacing:.02em; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis
+}
+.hilo-toolbar button{
+  position:absolute; right:13px; top:10px; width:40px; height:40px; border:0; border-radius:50%;
+  background:rgba(255,255,255,.16); color:white;
+  font-size:22px; transition:background var(--transition-fast)
+}
+.hilo-toolbar button:hover{
+  background:rgba(255,255,255,.28)
+}
+
+/* ── Escena: Avatar circular + Bienvenida + Píldora ── */
+.hilo-scene-new{
+  display:flex; align-items:flex-start; gap:18px; padding:22px 22px 18px;
+  background:linear-gradient(145deg,#cde5d5 0 48%,#f6dfae 100%);
+  border-bottom:1px solid rgba(23,58,49,.10)
+}
+.hilo-avatar-wrapper{
+  position:relative; width:88px; height:88px; border-radius:50%; overflow:hidden;
+  background:var(--cream); box-shadow:0 6px 20px rgba(23,58,49,.18);
+  flex-shrink:0
+}
+.hilo-avatar{
+  width:100%; height:100%; object-fit:cover; object-position:center top;
+  transition:opacity 200ms ease, transform 200ms ease
+}
+.hilo-welcome{
+  flex:1; min-width:0
+}
+.hilo-greeting{
+  margin:0 0 10px; font-size:17px; font-weight:750; line-height:1.3; letter-spacing:-.02em; color:var(--ink)
+}
+.hilo-intent-pill{
+  display:inline-block; margin:0; padding:7px 14px; border-radius:12px;
+  background:rgba(255,255,255,.7); backdrop-filter:blur(6px);
+  color:var(--muted); font-size:11px; font-weight:600;
+  border:1px solid rgba(23,58,49,.08);
+  animation:fade-in 200ms ease both
+}
+.hilo-intent-pill.hidden{
+  display:none
+}
+
+/* ── Grid 3x3 de opciones ── */
+.hilo-content{
+  min-height:0; overflow:auto; padding:16px 18px 12px;
+  background:linear-gradient(180deg,#fffaf0,#f6eddd)
+}
+.hilo-grid{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+  animation:fade-in 250ms ease both
+}
+.hilo-card{
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  padding:20px 12px; background:white; border:1px solid var(--border-subtle);
+  border-radius:16px; cursor:pointer;
+  transition:transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  text-align:center
+}
+.hilo-card:hover,.hilo-card:focus-visible{
+  transform:translateY(-4px); box-shadow:var(--shadow); border-color:var(--ink);
+  outline:none
+}
+.hilo-card:active{
+  transform:translateY(-1px) scale(.98)
+}
+.hilo-card-icon{
+  width:44px; height:44px; border-radius:50%; display:grid; place-items:center;
+  background:var(--yellow); font-size:20px;
+  transition:background var(--transition-fast), transform var(--transition-fast)
+}
+.hilo-card:hover .hilo-card-icon{
+  transform:scale(1.08)
+}
+.hilo-card-label{
+  font-size:12px; font-weight:700; color:var(--ink); line-height:1.15
+}
+.hilo-card-sub{
+  font-size:9px; font-weight:600; color:var(--muted); line-height:1.2;
+  margin-top:-4px
+}
+
+/* ── Stagger animation para grid ── */
+.hilo-grid .hilo-card:nth-child(1){animation-delay:0ms}
+.hilo-grid .hilo-card:nth-child(2){animation-delay:40ms}
+.hilo-grid .hilo-card:nth-child(3){animation-delay:80ms}
+.hilo-grid .hilo-card:nth-child(4){animation-delay:120ms}
+.hilo-grid .hilo-card:nth-child(5){animation-delay:160ms}
+.hilo-grid .hilo-card:nth-child(6){animation-delay:200ms}
+.hilo-grid .hilo-card:nth-child(7){animation-delay:240ms}
+.hilo-grid .hilo-card:nth-child(8){animation-delay:280ms}
+.hilo-grid .hilo-card:nth-child(9){animation-delay:320ms}
+
+/* ── Mensajes y resultados ── */
+.hilo-intent{
+  margin:0 0 11px; padding:8px 11px; border-radius:12px; background:rgba(34,124,140,.11); color:var(--ink);
+  font-size:11px; font-weight:700
+}
+.assistant-body{
+  display:grid; gap:10px
+}
+.hilo-message{
+  max-width:88%; margin:0; padding:10px 13px; border-radius:16px; font-size:12px; line-height:1.45;
+  animation:hilo-message-in .24s ease both
+}
+.bot-message{
+  justify-self:start; background:#fff; border:1px solid var(--line); color:var(--ink); border-bottom-left-radius:5px
+}
+.user-message{
+  justify-self:end; background:var(--ink); color:#fff; border-bottom-right-radius:5px
+}
+.assistant-result-grid{
+  display:grid; gap:7px
+}
+.assistant-result-card{
+  display:grid; grid-template-columns:1fr auto; gap:3px 10px; align-items:center; width:100%; padding:10px 12px;
+  border:1px solid var(--line); border-radius:14px; background:white; text-align:left;
+  color:var(--ink); cursor:pointer;
+  transition:transform var(--transition-fast),border-color var(--transition-fast),box-shadow var(--transition-fast)
+}
+.assistant-result-card:hover{
+  transform:translateY(-2px); border-color:var(--ink); box-shadow:var(--shadow-sm)
+}
+.assistant-result-card b{font-size:12px}
+.assistant-result-card small{grid-column:1; color:var(--muted); font-size:10px}
+.assistant-result-card span{grid-column:2; grid-row:1/3; color:var(--earth); font-size:18px}
+.assistant-back{
+  justify-self:start; border:0; background:transparent; color:var(--ink); font-size:11px; font-weight:900;
+  padding:7px 2px; cursor:pointer;
+  border-bottom:2px solid var(--yellow)
+}
+.assistant-back:hover{
+  border-bottom-color:var(--ink)
+}
+
+/* ── Input inferior ── */
+.assistant-form{
+  display:flex; gap:8px; padding:12px 16px 16px; background:#fffaf0;
+  border-top:1px solid var(--line)
+}
+.assistant-form input{
+  min-width:0; flex:1; border:1px solid var(--line); border-radius:999px; padding:13px 20px; outline:none;
+  background:white; font-size:14px;
+  transition:border-color var(--transition-fast), box-shadow var(--transition-fast)
+}
+.assistant-form input:focus{
+  border-color:var(--ink);
+  box-shadow:0 0 0 3px rgba(23,58,49,.09)
+}
+.assistant-form input::placeholder{
+  color:var(--muted); font-weight:500
+}
+.assistant-form button{
+  width:48px; height:48px; display:grid; place-items:center; border:0; border-radius:50%; background:var(--ink);
+  color:white; font-size:22px; font-weight:900; cursor:pointer;
+  transition:transform var(--transition-fast), background var(--transition-fast)
+}
+.assistant-form button:hover{
+  transform:scale(1.05); background:#0c241e
+}
+.assistant-form button:active{
+  transform:scale(.95)
+}
+
+/* ── Animaciones ── */
+@keyframes hilo-float{
+  0%,100%{transform:translateY(0) rotate(-1deg)}
+  50%{transform:translateY(-7px) rotate(1deg)}
+}
+@keyframes hilo-pose-change{
+  0%{opacity:.3; transform:scale(.92)}
+  60%{opacity:.9; transform:scale(1.04)}
+  100%{opacity:1; transform:scale(1)}
+}
+@keyframes fade-in{
+  from{opacity:0}
+  to{opacity:1}
+}
+@keyframes slide-up{
+  from{opacity:0; transform:translateY(12px)}
+  to{opacity:1; transform:translateY(0)}
+}
+@keyframes hilo-message-in{
+  from{opacity:0; transform:translateY(5px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .nav-hilo{display:none}
+}
+@media(max-width:600px){
+  .virtual-assistant{right:4px; bottom:4px}
+  .assistant-character{width:122px; height:150px}
+  .assistant-toggle{width:118px; height:146px}
+  .assistant-character-img{width:100px; height:136px}
+  .assistant-name{font-size:10px; padding:6px 10px}
+  .assistant-bubble{
+    right:96px; bottom:102px; width:min(205px,calc(100vw - 145px));
+    font-size:12px
+  }
+  .assistant-panel{
+    inset:6px; width:auto; height:auto;
+    grid-template-rows:auto auto 1fr auto;
+    border-radius:25px
+  }
+  .hilo-toolbar{min-height:50px; padding:10px 55px 10px 14px}
+  .hilo-toolbar-title{font-size:11px}
+  .hilo-toolbar button{right:9px; top:7px; width:36px; height:36px; font-size:20px}
+  .hilo-scene-new{padding:16px; gap:14px}
+  .hilo-avatar-wrapper{width:72px; height:72px}
+  .hilo-greeting{font-size:15px}
+  .hilo-grid{gap:8px}
+  .hilo-card{padding:14px 8px; border-radius:14px}
+  .hilo-card-icon{width:38px; height:38px; font-size:17px}
+  .hilo-card-label{font-size:11px}
+  .hilo-card-sub{font-size:8px}
+  .hilo-content{padding:12px}
+  .assistant-form{padding:9px 11px 11px}
+  .assistant-form input{padding:11px 16px; font-size:13px}
+  .assistant-form button{width:44px; height:44px; font-size:20px}
+}
+@media(max-width:400px){
+  .hilo-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+  .assistant-character-img,.assistant-character-img.is-changing,.hilo-avatar.is-changing{
+    animation:none
+  }
+  .hilo-grid .hilo-card{animation:none!important}
+  .hilo-intent-pill{animation:none}
+}

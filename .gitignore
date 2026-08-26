@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+ENV/
+
+# Node.js / OpenCode
+.opencode/node_modules/
+
+# Archivos de entorno y secretos
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+*.swp
+*~
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
