@@ -40,27 +40,28 @@ function mapEmbedUrl(coords){if(!coords)return 'https://www.openstreetmap.org/ex
 function renderMap(){
   const map=$('#territoryMap');
   const items=state.publications.filter(p=>mapKind==='TODOS'||p.kind===mapKind);
-  map.innerHTML=`<iframe class="osm-frame" src="${mapEmbedUrl()}" title="Mapa real de Caucasia"></iframe>`;
-  const sidebar=$('#mapPlaceList');
-  if(sidebar){
-    sidebar.innerHTML=items.map(p=>`<button class="map-sidebar-item" data-place-id="${p.id}" title="${escapeHTML(p.title)} — ${escapeHTML(p.location||'Caucasia')}"><span class="place-dot ${p.kind.toLowerCase()}"></span><div><b>${escapeHTML(p.title)}</b><small>${escapeHTML(p.location||'Caucasia')}</small></div></button>`).join('');
-    $$('[data-place-id]',sidebar).forEach(button=>button.onclick=()=>selectMapItem(+button.dataset.placeId));
-    const first=$('.map-sidebar-item[data-place-id]',sidebar);
-    if(first)selectMapItem(+first.dataset.placeId);
-    else{
-      $('#mapCard').innerHTML='<span class="map-card-icon">+</span><h3>No hay puntos en esta categoría</h3><p>Prueba otro filtro para seguir explorando el territorio.</p>';
-      $('#mapCard').classList.remove('visible');
-    }
-  }
+  const list=items.map(p=>`<button data-place-id="${p.id}" title="${escapeHTML(p.title)} — ${escapeHTML(p.location||'Caucasia')}"><span class="place-dot ${p.kind.toLowerCase()}"></span><b>${escapeHTML(p.title)}</b><small>${escapeHTML(p.location||'Caucasia')}</small></button>`).join('');
+  const legend=`
+    <div class="map-legend">
+      <span class="map-legend-item"><span class="map-legend-dot" style="background:var(--orange)"></span>Eventos</span>
+      <span class="map-legend-item"><span class="map-legend-dot" style="background:var(--purple)"></span>Oportunidades</span>
+      <span class="map-legend-item"><span class="map-legend-dot" style="background:var(--yellow);border:1px solid var(--ink)"></span>Historias</span>
+      <span class="map-legend-item"><span class="map-legend-dot" style="background:var(--ink)"></span>Talento</span>
+      <span class="map-legend-item"><span class="map-legend-dot" style="background:#3b82f6"></span>Iniciativas</span>
+    </div>`;
+  map.innerHTML=`<iframe class="osm-frame" src="${mapEmbedUrl()}" title="Mapa real de Caucasia"></iframe><div class="map-place-list">${list}</div>${legend}`;
+  $$('[data-place-id]',map).forEach(button=>button.onclick=()=>selectMapItem(+button.dataset.placeId));
+  const first=$('.map-place-list [data-place-id]',map);
+  if(first)selectMapItem(+first.dataset.placeId);
+  else $('#mapCard').innerHTML='<span class="map-card-icon">+</span><h3>No hay puntos en esta categoría</h3><p>Prueba otro filtro para seguir explorando el territorio.</p>';
 }
 function selectMapItem(id){
   const map=$('#territoryMap'),p=state.publications.find(item=>item.id===id);
   if(!p)return;
   const coords=publicationCoords(p),frame=$('.osm-frame',map);
-  $$('.map-sidebar-item').forEach(item=>item.classList.toggle('active',+item.dataset.placeId===id));
+  $$('[data-place-id]',map).forEach(item=>item.classList.toggle('active',+item.dataset.placeId===id));
   if(frame)frame.src=mapEmbedUrl(coords);
   $('#mapCard').innerHTML=`<span class="map-card-icon">⌖</span><p class="map-meta">${labels[p.kind]||p.kind} · ${escapeHTML(p.location||'Caucasia')}</p><h3>${escapeHTML(p.title)}</h3><p>${escapeHTML(p.summary)}</p><a class="text-link external-map" href="${osmUrl(coords)}" target="_blank" rel="noopener">Abrir ubicación en OpenStreetMap</a><button class="btn btn-primary" data-map-open="${p.id}">Ver publicación</button>`;
-  $('#mapCard').classList.add('visible');
   $('[data-map-open]').onclick=()=>showDetail(id);
 }
 function renderSaved(){
@@ -543,7 +544,7 @@ function assistantRunAction(key,label=''){
     assistantResults(items);
   }else if(key==='mapa'){
     assistantPose('senala');
-    assistantNavigate('#inicio','Voy a llevarte al mapa vivo de Caucasia.');
+    assistantNavigate('#mapa','Voy a llevarte al mapa vivo de Caucasia.');
   }else if(key==='sugerencia'){
     assistantMode='suggestion';
     $('#assistantInput').placeholder='Escribe tu sugerencia...';
@@ -673,7 +674,6 @@ function initAssistant(){
     assistantAsk(text);
   };
   $('#navHiloBtn').onclick=assistantOpen;
-  $('#mapNavHiloBtn').onclick=assistantOpen;
   bubble?.classList.add('is-hidden');
   clearTimeout(assistantContextTimer);
   assistantContextTimer=setTimeout(assistantSpeakContext,850);
