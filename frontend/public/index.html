@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#153D32"><title>TEJIDO — Descubre lo que mueve a Caucasia</title><link rel="stylesheet" href="/css/styles.css"><link rel="stylesheet" href="/css/hilo.css"></head>
+<body>
+<a class="skip-link" href="#explorar">Saltar al contenido principal</a>
+<div id="toast" class="toast" role="status"></div>
+<header class="site-header">
+  <a class="brand" href="#inicio" aria-label="TEJIDO inicio"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>TEJIDO<small>CAUCASIA</small></span></a>
+  <nav class="desktop-nav" aria-label="Principal"><a href="#explorar">Explorar</a><a href="#inicio">Mapa vivo</a><a href="#agenda">Agenda</a><a href="#oportunidades">Oportunidades</a><a href="#guardadas" id="savedNav" class="hidden">Guardadas</a><a href="#talento">Talento</a><button class="nav-hilo" id="navHiloBtn" type="button">Hilo ✦</button></nav>
+  <div class="header-actions"><button class="icon-btn" id="searchToggle" aria-label="Buscar">⌕</button><button class="btn btn-ghost" id="loginBtn">Ingresar</button><button class="avatar hidden" id="userBtn" aria-label="Cuenta"></button><button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button></div>
+</header>
+<main>
+<section class="hero-map" id="inicio">
+  <div class="territory-map" id="territoryMap" aria-label="Mapa geográfico interactivo de Caucasia"></div>
+  <header class="map-nav">
+    <a class="map-nav-brand" href="#inicio" aria-label="TEJIDO inicio"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>TEJIDO<small>CAUCASIA</small></span></a>
+    <div class="map-nav-filters" id="mapFilters"><button class="map-chip active" data-map-kind="TODOS">Todo</button><button class="map-chip" data-map-kind="EVENTO">Eventos</button><button class="map-chip" data-map-kind="TALENTO">Talento</button><button class="map-chip" data-map-kind="OPORTUNIDAD">Oportunidades</button></div>
+    <button class="map-nav-hilo" id="mapNavHiloBtn" type="button">✦ Hilo</button>
+  </header>
+  <aside class="map-sidebar" id="mapSidebar">
+    <div class="map-sidebar-header">
+      <p class="eyebrow">Memoria, río y comunidad</p>
+      <h2>Caucasia se cuenta</h2>
+      <p class="map-sidebar-sub">Descubre saberes, música y eventos del territorio</p>
+    </div>
+    <div class="map-sidebar-list" id="mapPlaceList"></div>
+  </aside>
+  <aside class="map-card map-card--hero" id="mapCard" aria-live="polite"><span class="map-card-icon">⌖</span><p class="eyebrow">Mapa vivo</p><h3>Elige un punto del mapa</h3><p>Cada color representa una historia, evento, oportunidad o talento del territorio.</p></aside>
+</section>
+<section class="marquee" aria-label="Pilares"><div>MEMORIA <b>✦</b> RÍO <b>✦</b> SABERES <b>✦</b> TALENTO <b>✦</b> COMUNIDAD <b>✦</b> MEMORIA</div></section>
+<section class="section discover" id="explorar">
+  <div class="section-heading"><div><p class="eyebrow">Voces del territorio</p><h2>Lo nuestro tiene mucho que contar</h2></div><p>Recorre las historias, encuentros y saberes que mantienen viva la identidad del Bajo Cauca.</p></div>
+  <div class="toolbar"><div class="filters" id="filters"><button class="chip active" data-kind="TODOS">Todo</button><button class="chip" data-kind="HISTORIA">Historias</button><button class="chip" data-kind="EVENTO">Eventos</button><button class="chip" data-kind="OPORTUNIDAD">Oportunidades</button><button class="chip" data-kind="TALENTO">Talento</button><button class="chip" data-kind="INICIATIVA">Iniciativas</button></div><label class="search-box"><span>⌕</span><input id="searchInput" aria-label="Buscar contenidos" placeholder="Buscar en Caucasia…"></label></div>
+  <div class="content-grid" id="contentGrid" aria-live="polite"></div><div class="empty hidden" id="emptyState"><b>No encontramos coincidencias</b><p>Prueba otra palabra o quita algunos filtros.</p></div>
+</section>
+
+<section class="section agenda" id="agenda"><div class="agenda-copy"><p class="eyebrow">Tu próxima historia empieza aquí</p><h2>Esta semana<br>en Caucasia</h2><p>Planes para encontrarnos, aprender y celebrar lo nuestro.</p><a href="#explorar" class="text-link" data-filter="EVENTO">Ver toda la agenda →</a></div><div id="agendaList" class="agenda-list"></div></section>
+<section class="manifesto"><div class="manifesto-stitch"></div><p>Aquí cada voz deja una huella.</p><h2>Tejemos <em>memoria colectiva.</em></h2><p class="manifesto-sub">Celebramos a quienes crean, cuidan y transforman nuestro territorio.</p></section>
+<section class="section support" id="apoyar">
+  <div class="support-layout">
+    <div class="support-copy">
+      <p class="eyebrow">Sostén este tejido</p>
+      <h2>Si este espacio<br>te ha servido,</h2>
+      <p class="support-lead">puedes echar una mano. Cada apoyo nos ayuda a seguir contando historias del territorio.</p>
+      <div class="support-amounts">
+        <button class="amount-btn" data-amount="5" type="button">$5<small>un café</small></button>
+        <button class="amount-btn" data-amount="15" type="button">$15<small>un almuerzo</small></button>
+        <button class="amount-btn" data-amount="30" type="button">$30<small>un taller</small></button>
+      </div>
+      <a class="btn btn-primary support-btn" id="supportBtn"
+         href="https://wa.me/573007378306?text=Hola,%20quiero%20apoyar%20TEJIDO"
+         target="_blank" rel="noopener">
+        💚 Echar la mano
+      </a>
+      <small class="support-note">Te atendemos por WhatsApp. Sin formularios.</small>
+    </div>
+    <div class="support-art" aria-hidden="true">
+      <div class="support-icon">☕</div>
+    </div>
+  </div>
+</section>
+<section class="section collaborate" id="enlacete">
+  <div class="collab-layout">
+    <div class="collab-copy">
+      <p class="eyebrow">Enlácete con nosotros</p>
+      <h2>¿Tienes algo<br>que aportar?</h2>
+      <p class="collab-lead">No necesitas ser experto. Solo tener ganas de contar lo que sabes del territorio.</p>
+    </div>
+    <div class="collab-roles">
+      <div class="role-card"><span class="role-icon">📸</span><b>Sacás fotos</b><small>Del territorio, de la gente, de lo que pasa</small></div>
+      <div class="role-card"><span class="role-icon">✍️</span><b>Escribís</b><small>Historias, crónicas, lo que sientes del pueblo</small></div>
+      <div class="role-card"><span class="role-icon">🗺️</span><b>Conocés el territorio</b><small>Sabes dónde pasan las cosas</small></div>
+      <div class="role-card"><span class="role-icon">🎙️</span><b>Tenés algo que contar</b><small>Una historia, un oficio, una tradición</small></div>
+    </div>
+    <a class="btn btn-primary collab-btn"
+       href="https://wa.me/573104106629?text=Hola,%20quiero%20enl%C3%A1carme%20con%20TEJIDO"
+       target="_blank" rel="noopener">
+      💬 Escribinos
+    </a>
+  </div>
+</section>
+<section class="section opportunities" id="oportunidades"><div class="section-heading"><div><p class="eyebrow">Abre una puerta</p><h2>Oportunidades</h2></div><a href="#explorar" class="text-link" data-filter="OPORTUNIDAD">Ver todas →</a></div><div id="opportunityGrid" class="opportunity-grid"></div></section>
+<section class="section saved-section hidden" id="guardadas"><div class="section-heading"><div><p class="eyebrow">Tu selección personal</p><h2>Contenidos guardados</h2></div><p>Todo lo que marcas con el corazón queda reunido aquí para que puedas consultarlo cuando quieras.</p></div><div id="savedGrid" class="saved-grid"></div><div id="savedEmpty" class="saved-empty"><span>♡</span><b>Aún no has guardado contenido</b><p>Explora las publicaciones y presiona el corazón para añadirlas a esta sección.</p><a class="btn btn-primary" href="#explorar">Explorar contenidos</a></div></section>
+<section class="section talent" id="talento"><div class="talent-art"><span>VOCES QUE<br>TEJEN EL<br>TERRITORIO</span></div><div class="talent-copy"><p class="eyebrow">Talento de aquí</p><h2>Talentos que<br>llevan el río dentro.</h2><p>Conoce a artistas, portadores de tradición, líderes y creadores que mantienen viva nuestra cultura.</p><a href="#explorar" class="btn btn-primary" data-filter="TALENTO">Descubrir talentos</a></div></section>
+<section class="newsletter"><div><p class="eyebrow">La ronda continúa</p><h2>Que la cultura<br>nos encuentre.</h2></div><form id="newsletterForm"><label for="newsletterEmail">Correo electrónico</label><div><input type="email" id="newsletterEmail" required placeholder="tu@correo.com"><button class="btn btn-dark">Quiero enterarme</button></div><small>Sin ruido. Solo cosas que vale la pena descubrir.</small></form></section>
+</main>
+<footer><div class="footer-brand"><span class="brand-mark"><i></i><i></i><i></i></span><b>TEJIDO</b><p>Descubre lo que mueve a Caucasia.</p></div><div><b>Explora</b><a href="#explorar">Historias</a><a href="#agenda">Eventos</a><a href="#oportunidades">Oportunidades</a><a href="#talento">Talento</a></div><div><b>Proyecto</b><a href="#inicio">Acerca de TEJIDO</a><a href="#inicio">Mapa vivo</a><a href="#guardadas">Guardadas</a></div><div class="footer-note">Hecho con orgullo<br>en Caucasia, Antioquia.<span>© 2026 TEJIDO</span></div></footer>
+<div class="overlay hidden" id="overlay"></div>
+<aside class="drawer mobile-menu hidden" id="mobileMenu" aria-label="Menú principal"><button class="close" data-close>×</button><p class="eyebrow">Explora TEJIDO</p><h2>¿A dónde quieres ir?</h2><button class="btn btn-primary full mobile-account-btn" id="mobileLoginBtn">Ingresar a mi cuenta</button><nav><a href="#inicio">Inicio <span>01</span></a><a href="#explorar">Explorar <span>02</span></a><a href="#inicio">Mapa vivo <span>03</span></a><a href="#agenda">Agenda <span>04</span></a><a href="#oportunidades">Oportunidades <span>05</span></a><a href="#guardadas" class="mobile-saved hidden">Guardadas <span>06</span></a><a href="#talento">Talento <span>07</span></a></nav></aside>
+<aside class="modal hidden" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle"><button class="close" data-close>×</button><p class="eyebrow">Bienvenido a TEJIDO</p><h2 id="loginTitle">Vuelve a conectar.</h2><p>Ingresa para guardar, publicar y participar.</p><form id="loginForm"><label>Correo<input type="email" id="loginEmail" required value="gestor@tejido.co"></label><label>Contraseña<input type="password" id="loginPassword" required value="Gestor123!"></label><button class="btn btn-primary" type="submit">Ingresar</button></form><div class="demo-accounts"><b>Cuentas de demostración</b><small>El rol lo asigna la cuenta; no puede cambiarse después de ingresar.</small><button data-demo="admin"><strong>Administrador</strong><span>Modera y controla la plataforma</span></button><button data-demo="gestor"><strong>Gestor</strong><span>Crea y administra publicaciones</span></button><button data-demo="ciudadano"><strong>Ciudadano</strong><span>Guarda y reporta contenido</span></button></div></aside>
+<aside class="modal detail-modal hidden" id="detailModal" role="dialog" aria-modal="true"><button class="close" data-close>×</button><div id="detailContent"></div></aside>
+<aside class="modal editor-modal hidden" id="editorModal" role="dialog" aria-modal="true"><button class="close" data-close>×</button><p class="eyebrow">Panel de gestión</p><h2 id="editorTitle">Crear contenido</h2><form id="editorForm"><input type="hidden" id="editId"><input type="hidden" id="editImage"><div class="form-row"><label>Tipo<select id="editKind"><option value="HISTORIA">Historia</option><option value="EVENTO">Evento</option><option value="OPORTUNIDAD">Oportunidad</option><option value="TALENTO">Talento</option><option value="INICIATIVA">Iniciativa</option></select></label><label>Categoría<select id="editCategory"></select></label></div><label>Título<input id="editTitle" required minlength="5" maxlength="180"></label><label>Resumen<textarea id="editSummary" required minlength="10" maxlength="500" rows="2"></textarea></label><label>Contenido<textarea id="editContent" required minlength="20" maxlength="20000" rows="5"></textarea></label><div class="form-row"><label>Lugar<input id="editLocation" maxlength="180" value="Caucasia"></label><label>Fecha de inicio<input id="editDate" type="datetime-local"></label></div><div class="form-row"><label>Fecha final o cierre<input id="editEndDate" type="datetime-local"></label><label>Enlace<input id="editLink" type="url" placeholder="https://"></label></div><fieldset class="gallery-editor"><legend>Galería de imágenes <span>(opcional)</span></legend><p class="field-help">Agrega una portada y, si quieres, más fotografías. Pega enlaces que comiencen por <b>https://</b>.</p><div id="galleryImageFields"></div><button class="gallery-add" id="addGalleryImage" type="button">+ Añadir otra imagen</button><label>Crédito de las imágenes<input id="editImageCredit" maxlength="250" placeholder="Ejemplo: Fotografías: Colectivo Trópico Utópico"></label></fieldset><div class="form-actions"><button type="button" class="btn btn-soft" data-close>Cancelar</button><button class="btn btn-primary" type="submit">Guardar borrador</button></div></form></aside>
+<aside class="drawer hidden" id="userDrawer"><button class="close" data-close>×</button><div id="userSummary"></div><div id="roleCapabilities" class="role-capabilities"></div><div class="stats hidden" id="adminStats"></div><button class="btn btn-primary full" id="createBtn">+ Crear contenido</button><h3 id="panelTitle">Mis contenidos</h3><p id="panelHelp" class="panel-help"></p><div id="myContent" class="my-content"></div><button class="btn btn-ghost full" id="logoutBtn">Cerrar sesión</button></aside>
+<section class="virtual-assistant" id="assistantWidget" aria-label="Asistente virtual de TEJIDO">
+  <div class="assistant-character">
+    <div class="assistant-bubble" id="assistantBubble" role="status">
+      ¡Hola! Soy Hilo. ¿Te ayudo a descubrir Caucasia?
+    </div>
+    <button class="assistant-toggle" id="assistantToggle" type="button" aria-label="Hablar con Hilo">
+      <img
+        class="assistant-character-img"
+        id="assistantCharacter"
+        data-assistant-character
+        src="/images/hilo/hilo-saluda.png"
+        alt="Hilo, asistente virtual de TEJIDO"
+      >
+      <span class="assistant-name">Habla con Hilo</span>
+    </button>
+  </div>
+  <aside class="assistant-panel hidden" id="assistantPanel" role="dialog" aria-label="Conversación con Hilo">
+    <div class="hilo-toolbar">
+      <span class="hilo-toolbar-title">HILO ESTÁ CONTIGO | Una conversación para descubrir Caucasia</span>
+      <button type="button" id="assistantClose" aria-label="Cerrar asistente">×</button>
+    </div>
+    <section class="hilo-scene-new" aria-label="Hilo te saluda">
+      <div class="hilo-avatar-wrapper">
+        <img class="hilo-avatar" data-assistant-character src="/images/hilo/hilo-saluda.png" alt="Hilo, guía de TEJIDO">
+      </div>
+      <div class="hilo-welcome">
+        <p class="hilo-greeting" id="assistantGreeting">¡Hola! Soy Hilo, tu guía de TEJIDO. Cuéntame qué quieres hacer hoy en Caucasia.</p>
+        <p class="hilo-intent-pill hidden" id="assistantIntentPill" aria-live="polite"></p>
+      </div>
+    </section>
+    <div class="hilo-content" id="assistantContent">
+      <div class="hilo-grid" id="assistantGrid" role="list" aria-label="Opciones de Hilo"></div>
+    </div>
+    <form class="assistant-form" id="assistantForm">
+      <label class="sr-only" for="assistantInput">Cuéntaselo a Hilo</label>
+      <input id="assistantInput" autocomplete="off" placeholder="Cuéntaselo a Hilo...">
+      <button type="submit" aria-label="Enviar a Hilo"><span aria-hidden="true">➜</span><span class="sr-only">Enviar</span></button>
+    </form>
+  </aside>
+</section>
+<!-- ========== CAPA BASE ========== -->
+<!-- Utilidades, estado y cliente HTTP -->
+<script src="/js/utils/helpers.js"></script>
+<script src="/js/state/store.js"></script>
+<script src="/js/services/api.js"></script>
+
+<!-- ========== CONSTANTES Y COMPONENTES ========== -->
+<!-- Etiquetas globales y componentes reutilizables -->
+<script src="/js/modules/constants.js"></script>
+<script src="/js/components/publications.js"></script>
+<script src="/js/components/detail.js"></script>
+
+<!-- ========== MÓDULOS DE NEGOCIO ========== -->
+<!-- Orquestación y lógica de dominio -->
+<script src="/js/core/loader.js"></script>
+<script src="/js/modules/filters.js"></script>
+<script src="/js/modules/map.js"></script>
+<script src="/js/modules/auth.js"></script>
+<script src="/js/modules/favorites.js"></script>
+<script src="/js/modules/content.js"></script>
+<script src="/js/modules/editor.js"></script>
+
+<!-- ========== INTERFAZ DE USUARIO ========== -->
+<!-- Eventos, interacciones y asistente -->
+<script src="/js/modules/ui.js"></script>
+<script src="/js/modules/interactions.js"></script>
+<script src="/js/modules/assistant.js"></script>
+
+<!-- ========== ENTRADA PRINCIPAL ========== -->
+<!-- Inicialización de la aplicación -->
+<script src="/js/app.js"></script>
+</body></html>

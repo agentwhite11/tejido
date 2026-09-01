@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$Root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$Root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $Server = Join-Path $Root "server.py"
 $AppUrl = "http://127.0.0.1:8765/#explorar"
 $HealthUrl = "http://127.0.0.1:8765/api/health"
@@ -86,7 +86,7 @@ try {
     }
 
     if (-not (Test-Path -LiteralPath $Server)) {
-        throw "No se encontro server.py junto al lanzador."
+        throw "No se encontro server.py en la raiz del proyecto."
     }
 
     Write-Host "Python encontrado: $($Python.File)"
