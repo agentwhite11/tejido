@@ -15,7 +15,7 @@ from urllib.parse import urlparse, parse_qs
 from backend.config import HOST, PORT, PUBLIC_DIR, DB_PATH
 from backend.database.connection import get_db_connection
 from backend.database.init_db import init_db
-from backend.api.routes import auth, handle_auth_login, handle_auth_logout
+from backend.api.routes import auth, handle_auth_login, handle_auth_logout, route_api
 from backend.services.validation import publication_input, validate_category
 
 MAX_BODY_BYTES = 1_000_000
@@ -157,7 +157,7 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
-    def do_GET(self):
+    def _legacy_do_GET(self):
         parsed = urlparse(self.path)
         path = parsed.path
         query = parse_qs(parsed.query)
@@ -248,6 +248,11 @@ class Handler(SimpleHTTPRequestHandler):
                 return self.send_json({"total_supporters": total})
 
         self.error(404, "NOT_FOUND", "Ruta no encontrada")
+
+    def do_GET(self):
+        if self.path.startswith("/api/"):
+            return route_api(self)
+        return self.serve_static()
 
     def do_POST(self):
         path = urlparse(self.path).path

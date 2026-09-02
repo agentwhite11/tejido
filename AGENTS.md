@@ -33,27 +33,23 @@ Base de datos principal:
 
 Frontend:
 
-- HTML
-- CSS
-- JavaScript vanilla
+- React
+- Vite
+- JavaScript
 
 No existe obligación de utilizar frameworks.
 
 ---
 
-## 3. TECNOLOGÍAS PROHIBIDAS SIN AUTORIZACIÓN
+## 3. TECNOLOGÍAS NO INTRODUCIR SIN AUTORIZACIÓN
 
 No introducir:
 
 - Flask
 - Django
 - FastAPI
-- React
 - Vue
 - Angular
-- Node.js
-- npm
-- Vite
 - Webpack
 - ORMs innecesarios
 - frameworks CSS nuevos

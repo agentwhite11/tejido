@@ -1,4 +1,37 @@
-# Frontend - Arquitectura Modularizada (v2.0)
+# Frontend React + Vite
+
+El frontend React nuevo vive en `src/` y usa Vite. La versión vanilla anterior permanece en `public/` durante la migración gradual para conservar un respaldo funcional.
+
+## Desarrollo
+
+Primero inicia el backend desde la raíz del proyecto:
+
+```powershell
+cd C:\Users\Bryan\Tejido\tejido
+python server.py
+```
+
+En otra terminal, inicia Vite:
+
+```powershell
+cd C:\Users\Bryan\Tejido\tejido\frontend
+npm install
+npm run dev
+```
+
+Abre `http://localhost:5173`. El proxy de Vite redirige `/api`, `/images` y `/assets` al backend Python en `http://127.0.0.1:8765`.
+
+## Producción
+
+```powershell
+npm run build
+```
+
+La migración se hará por etapas: publicaciones y filtros, autenticación, favoritos, editor, mapa y asistente Hilo. La versión vanilla no se elimina hasta completar la paridad funcional.
+
+---
+
+# Frontend Vanilla - Arquitectura Modularizada (v2.0)
 
 ## 📊 Estructura
 

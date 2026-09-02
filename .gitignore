@@ -11,6 +11,8 @@ ENV/
 
 # Node.js / OpenCode
 .opencode/node_modules/
+frontend/node_modules/
+frontend/dist/
 
 # Archivos de entorno y secretos
 .env

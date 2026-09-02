@@ -121,9 +121,11 @@ Respuesta esperada:
 - **Validación:** `backend/services/validation.py`
 
 ### Frontend
-- **HTML:** `frontend/public/index.html`
-- **CSS:** `frontend/public/css/` (styles.css, hilo.css)
-- **JavaScript Modular:**
+- **React + Vite:** `frontend/src/`
+- **Desarrollo:** `npm run dev` desde `frontend/`
+- **Respaldo vanilla:** `frontend/public/` durante la migración
+- **CSS:** `frontend/src/styles.css` y estilos vanilla heredados
+- **JavaScript Modular heredado:**
   - `js/utils/` - Funciones base
   - `js/state/` - Gestión de estado
   - `js/services/` - Cliente HTTP
@@ -193,10 +195,11 @@ TEJIDO_DB=postgresql://...
 - [ ] Validación centralizada
 
 ### Fase 4: Migración a React
-- [ ] Crear proyecto React
-- [ ] Importar módulos existentes
-- [ ] Componentes React reutilizables
-- [ ] Mantener compatibilidad con backend
+- [x] Crear proyecto React + Vite
+- [x] Conectar publicaciones y filtros con la API existente
+- [ ] Migrar autenticación, favoritos y editor
+- [ ] Migrar mapa y asistente Hilo
+- [ ] Retirar frontend vanilla después de completar la paridad
 
 ### Fase 5: Mejoras BD (Futuro)
 - [ ] Opción: Migrar a PostgreSQL
