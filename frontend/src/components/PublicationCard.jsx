@@ -1,9 +1,12 @@
 export default function PublicationCard({ publication }) {
+  const image = publication.image || '';
+  const isGradient = image.startsWith('linear-gradient(');
+
   return (
     <article className="publication-card">
       <div
         className="publication-image"
-        style={{ backgroundImage: `url("${publication.image}")` }}
+        style={{ backgroundImage: isGradient ? image : `url("${image}")` }}
         role="img"
         aria-label={publication.title}
       />

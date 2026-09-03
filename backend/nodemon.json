@@ -1,0 +1,7 @@
+{
+  "watch": ["../backend", "../server.py"],
+  "ignore": ["**/__pycache__/**", "../frontend/**", "../data/**"],
+  "ext": "py",
+  "exec": "py -3 ../server.py",
+  "delay": 300
+}

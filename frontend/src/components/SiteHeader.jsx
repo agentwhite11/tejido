@@ -1,10 +1,9 @@
+import Logo from './Logo.jsx';
+
 export default function SiteHeader({ onLogin }) {
   return (
     <header className="site-header">
-      <a className="brand" href="#inicio" aria-label="TEJIDO inicio">
-        <span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>
-        <span>TEJIDO<small>CAUCASIA</small></span>
-      </a>
+      <Logo />
       <nav aria-label="Principal">
         <a href="#inicio">Inicio</a>
         <a href="#explorar">Explorar</a>

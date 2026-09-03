@@ -1,27 +1,11 @@
-import hashlib
-import hmac
-import secrets
 from datetime import datetime, timezone
 
 from backend.database.connection import get_db_connection
+from backend.services.auth_service import hash_password
 
 
 def now():
     return datetime.now(timezone.utc).isoformat()
-
-
-def hash_password(password, salt=None):
-    salt = salt or secrets.token_hex(16)
-    digest = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 120000).hex()
-    return salt + "$" + digest
-
-
-def verify_password(password, stored):
-    try:
-        salt, digest = stored.split("$", 1)
-        return hmac.compare_digest(hash_password(password, salt).split("$", 1)[1], digest)
-    except Exception:
-        return False
 
 
 def seed_database():

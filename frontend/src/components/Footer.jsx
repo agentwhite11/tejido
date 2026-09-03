@@ -1,9 +1,10 @@
+import Logo from './Logo.jsx';
+
 export default function Footer() {
   return (
     <footer>
       <div className="footer-brand">
-        <span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>
-        <b>TEJIDO</b>
+        <Logo showLocation={false} />
         <p>Descubre lo que mueve a Caucasia.</p>
       </div>
       <div>

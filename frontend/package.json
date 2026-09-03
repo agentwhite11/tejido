@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:backend": "nodemon --config ../backend/nodemon.json",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -14,5 +15,7 @@
     "react": "latest",
     "react-dom": "latest"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "nodemon": "latest"
+  }
 }

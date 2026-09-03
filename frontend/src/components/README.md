@@ -2,6 +2,7 @@
 
 Esta carpeta contiene las piezas visuales reutilizables del frontend React.
 
+- `Logo.jsx`: identidad visual reutilizable de TEJIDO.
 - `SiteHeader.jsx`: navegación principal y acceso de usuario.
 - `HeroSection.jsx`: presentación inicial de TEJIDO.
 - `ExploreSection.jsx`: filtros, búsqueda y estados de carga.

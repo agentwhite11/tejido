@@ -1,36 +1,17 @@
 import json
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 from urllib.parse import parse_qs, urlparse
 
 from backend.database.connection import get_db_connection
-from backend.database.seed import verify_password
-
-
-def now():
-    return datetime.now(timezone.utc).isoformat()
-
-
-def rowdict(record):
-    if not record:
-        return None
-    return {key: value for key, value in dict(record).items()}
+from backend.repositories.publications import get_publication, get_publication_owner_state, list_publication_images, list_publications
+from backend.services.auth_service import get_current_user, login_user, logout_user, now
+from backend.services.serialization import rowdict
 
 
 def auth(handler):
-    raw = handler.headers.get("Authorization", "")
-    token = raw[7:] if raw.startswith("Bearer ") else None
-    if not token:
-        return None
-    with get_db_connection() as conn:
-        record = conn.execute(
-            "SELECT u.id, u.name, u.email, r.name role FROM sessions s "
-            "JOIN users u ON u.id=s.user_id "
-            "JOIN roles r ON r.id=u.role_id "
-            "WHERE s.token=? AND s.expires_at>? AND u.active=1",
-            (token, now()),
-        ).fetchone()
-        return rowdict(record)
+    record = get_current_user(handler)
+    return rowdict(record)
 
 
 def route_api(handler):
@@ -92,49 +73,67 @@ def route_api(handler):
     return handler.error(404, "NOT_FOUND", "Ruta no encontrada")
 
 
+def route_api_post(handler, path, payload):
+    user = auth(handler)
+    with get_db_connection() as conn:
+        if path == "/api/suggestions":
+            message = str(payload.get("message", "")).strip()
+            if len(message) < 10:
+                return handler.error(400, "VALIDATION", "Escribe una sugerencia de al menos 10 caracteres")
+            if len(message) > 1000:
+                return handler.error(400, "VALIDATION", "La sugerencia no puede superar 1000 caracteres")
+            cur = conn.execute(
+                "INSERT INTO suggestions(user_id,message,status,created_at) VALUES(?,?,?,?)",
+                (user["id"] if user else None, message, "NEW", now()),
+            )
+            return handler.send_json({"id": cur.lastrowid, "ticket": f"TEJ-{cur.lastrowid:04d}", "message": "Sugerencia recibida"}, 201)
+
+        if path == "/api/support":
+            name = str(payload.get("name", "")).strip()
+            amount = payload.get("amount")
+            method = str(payload.get("method", "nequi")).strip().lower()
+            if not name or len(name) < 2:
+                return handler.error(400, "VALIDATION", "Escribe tu nombre")
+            if not isinstance(amount, (int, float)) or amount < 1:
+                return handler.error(400, "VALIDATION", "El monto debe ser un número positivo")
+            if method not in ("nequi", "daviplata", "pse", "efectivo", "otro"):
+                method = "nequi"
+            cur = conn.execute(
+                "INSERT INTO supporters(name,amount,method,created_at) VALUES(?,?,?,?)",
+                (name, int(amount), method, now()),
+            )
+            return handler.send_json({"id": cur.lastrowid, "message": "Gracias por tu apoyo"}, 201)
+
+        if path == "/api/collaborate":
+            name = str(payload.get("name", "")).strip()
+            email = str(payload.get("email", "")).strip().lower()
+            role = str(payload.get("role", "")).strip()
+            message = str(payload.get("message", "")).strip()
+            if not name or len(name) < 2:
+                return handler.error(400, "VALIDATION", "Escribe tu nombre")
+            if not email or "@" not in email:
+                return handler.error(400, "VALIDATION", "Escribe un correo válido")
+            if not role:
+                return handler.error(400, "VALIDATION", "Selecciona un rol")
+            if len(message) > 1000:
+                return handler.error(400, "VALIDATION", "El mensaje no puede superar 1000 caracteres")
+            cur = conn.execute(
+                "INSERT INTO collaborators(name,email,role,message,created_at) VALUES(?,?,?,?,?)",
+                (name, email, role, message or None, now()),
+            )
+            return handler.send_json({"id": cur.lastrowid, "message": "Postulación recibida"}, 201)
+
+    return handler.error(404, "NOT_FOUND", "Ruta no encontrada")
+
+
 def _handle_publications_get(handler, conn, query):
     user = auth(handler)
-    where = ["p.deleted=0"]
-    args = []
-
-    wants_mine = query.get("mine") == ["1"] and user
-    wants_admin_status = query.get("status") and user and user["role"] == "ADMIN"
-
-    if wants_mine:
-        where.append("p.author_id=?")
-        args.append(user["id"])
-    elif wants_admin_status:
-        where.append("p.status=?")
-        args.append(query["status"][0])
-    else:
-        where.append("p.status='PUBLISHED'")
-
-    if query.get("kind") and query["kind"][0] != "TODOS":
-        where.append("p.kind=?")
-        args.append(query["kind"][0])
-
-    if query.get("search"):
-        where.append("(p.title LIKE ? OR p.summary LIKE ? OR p.location LIKE ?)")
-        term = "%" + query["search"][0] + "%"
-        args += [term, term, term]
-
-    sql = (
-        "SELECT p.*, c.name category, c.color, u.name author, "
-        "EXISTS(SELECT 1 FROM favorites f WHERE f.publication_id=p.id AND f.user_id=?) favorite "
-        "FROM publications p JOIN categories c ON c.id=p.category_id JOIN users u ON u.id=p.author_id "
-        "WHERE " + " AND ".join(where) + " ORDER BY p.featured DESC, COALESCE(p.start_date,p.created_at) DESC"
-    )
-    rows = conn.execute(sql, ([user["id"] if user else -1] + args)).fetchall()
+    rows = list_publications(conn, user, query)
     return handler.send_json([rowdict(r) for r in rows])
 
 
 def _handle_publication_detail(handler, conn, user, publication_id):
-    row = conn.execute(
-        "SELECT p.*, c.name category, c.color, u.name author, EXISTS(SELECT 1 FROM favorites f WHERE f.publication_id=p.id AND f.user_id=?) favorite "
-        "FROM publications p JOIN categories c ON c.id=p.category_id JOIN users u ON u.id=p.author_id "
-        "WHERE p.id=? AND p.deleted=0",
-        (user["id"] if user else -1, int(publication_id)),
-    ).fetchone()
+    row = get_publication(conn, user, publication_id)
 
     if not row:
         return handler.error(404, "NOT_FOUND", "Contenido no encontrado")
@@ -144,49 +143,23 @@ def _handle_publication_detail(handler, conn, user, publication_id):
 
 
 def _handle_images_get(handler, conn, user, publication_id):
-    pub = conn.execute("SELECT id, status, author_id FROM publications WHERE id=? AND deleted=0", (int(publication_id),)).fetchone()
+    pub = get_publication_owner_state(conn, publication_id)
     if not pub:
         return handler.error(404, "NOT_FOUND", "Publicación no encontrada")
     if pub["status"] != "PUBLISHED" and (not user or (user["role"] != "ADMIN" and pub["author_id"] != user["id"])):
         return handler.error(403, "FORBIDDEN", "No tienes acceso a este contenido")
-    rows = conn.execute(
-        "SELECT id, url, alt_text, caption, position FROM publication_images WHERE publication_id=? ORDER BY position ASC",
-        (int(publication_id),),
-    ).fetchall()
+    rows = list_publication_images(conn, publication_id)
     return handler.send_json([rowdict(r) for r in rows])
 
 
 def handle_auth_login(handler, payload):
-    email = str(payload.get("email", "")).strip().lower()
-    password = str(payload.get("password", ""))
-
-    with get_db_connection() as conn:
-        user = conn.execute(
-            "SELECT u.*, r.name role FROM users u JOIN roles r ON r.id=u.role_id WHERE lower(u.email)=? AND u.active=1",
-            (email,),
-        ).fetchone()
-
-        if not user or not verify_password(password, user["password_hash"]):
-            return handler.error(401, "INVALID_CREDENTIALS", "Correo o contraseña incorrectos")
-
-        token = __import__("secrets").token_urlsafe(32)
-        expires_at = (datetime.now(timezone.utc) + timedelta(hours=8)).isoformat()
-        conn.execute("INSERT INTO sessions(token, user_id, expires_at) VALUES(?,?,?)", (token, user["id"], expires_at))
-
-        return handler.send_json({
-            "token": token,
-            "user": {
-                "id": user["id"],
-                "name": user["name"],
-                "email": user["email"],
-                "role": user["role"],
-            },
-        })
+    result = login_user(payload.get("email"), payload.get("password", ""))
+    if not result:
+        return handler.error(401, "INVALID_CREDENTIALS", "Correo o contraseña incorrectos")
+    token, user = result
+    return handler.send_json({"token": token, "user": user})
 
 
 def handle_auth_logout(handler):
-    raw = handler.headers.get("Authorization", "")
-    token = raw[7:] if raw.startswith("Bearer ") else ""
-    with get_db_connection() as conn:
-        conn.execute("DELETE FROM sessions WHERE token=?", (token,))
+    logout_user(handler)
     return handler.send_json({"ok": True})
