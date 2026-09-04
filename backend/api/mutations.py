@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 from backend.api.routes import auth
 from backend.database.connection import get_db_connection
 from backend.repositories.publications import get_publication_owner_state
+from backend.services.collaborator_service import register_collaborator, share_publication, report_activity, redeem_reward_by_user
 from backend.services.publication_service import create_publication, update_publication
 from backend.services.validation import publication_input, validate_category
 
@@ -20,6 +21,54 @@ def route_post(handler, path, data, now):
             except ValueError as error:
                 return handler.error(400, "VALIDATION", str(error))
             return handler.send_json({"id": publication_id, "message": "Contenido creado"}, 201)
+
+        if path == "/api/collaborators/register":
+            if not user:
+                return handler.error(401, "UNAUTHORIZED", "Inicia sesión para registrarte")
+            try:
+                result = register_collaborator(conn, user["id"], user["name"])
+            except ValueError as error:
+                return handler.error(400, "VALIDATION", str(error))
+            return handler.send_json(result, 201)
+
+        if path == "/api/collaborators/share":
+            if not user:
+                return handler.error(401, "UNAUTHORIZED", "Inicia sesión para compartir")
+            publication_id = data.get("publication_id")
+            if not publication_id:
+                return handler.error(400, "VALIDATION", "publication_id es requerido")
+            result = share_publication(conn, user["id"], int(publication_id))
+            if result is None:
+                return handler.send_json({"points_earned": 0, "message": "Ya compartiste esta publicación"})
+            return handler.send_json(result)
+
+        if path == "/api/collaborators/report":
+            if not user:
+                return handler.error(401, "UNAUTHORIZED", "Inicia sesión para reportar")
+            activity_type = str(data.get("type", "")).strip()
+            description = str(data.get("description", "")).strip()
+            evidence_url = str(data.get("evidence_url", "")).strip() or None
+            if not activity_type:
+                return handler.error(400, "VALIDATION", "El tipo de actividad es requerido")
+            if not description:
+                return handler.error(400, "VALIDATION", "La descripción es requerida")
+            try:
+                result = report_activity(conn, user["id"], activity_type, description, evidence_url)
+            except ValueError as error:
+                return handler.error(400, "VALIDATION", str(error))
+            return handler.send_json(result, 201)
+
+        if path == "/api/collaborators/redeem":
+            if not user:
+                return handler.error(401, "UNAUTHORIZED", "Inicia sesión para canjear")
+            reward_id = data.get("reward_id")
+            if not reward_id:
+                return handler.error(400, "VALIDATION", "reward_id es requerido")
+            try:
+                result = redeem_reward_by_user(conn, user["id"], int(reward_id))
+            except ValueError as error:
+                return handler.error(400, "VALIDATION", str(error))
+            return handler.send_json(result)
 
         match = re.fullmatch(r"/api/publications/(\d+)/favorite", path)
         if match:

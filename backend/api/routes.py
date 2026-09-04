@@ -6,6 +6,7 @@ from urllib.parse import parse_qs, urlparse
 from backend.database.connection import get_db_connection
 from backend.repositories.publications import get_publication, get_publication_owner_state, list_publication_images, list_publications
 from backend.services.auth_service import get_current_user, login_user, logout_user, now
+from backend.services.collaborator_service import get_profile, get_ranking_top, get_rewards_catalog, get_stats
 from backend.services.serialization import rowdict
 
 
@@ -70,6 +71,31 @@ def route_api(handler):
         if match:
             return _handle_images_get(handler, conn, auth(handler), match.group(1))
 
+        if path == "/api/collaborators/profile":
+            user = auth(handler)
+            if not user:
+                return handler.error(401, "UNAUTHORIZED", "Inicia sesión")
+            profile = get_profile(conn, user["id"])
+            if not profile:
+                return handler.send_json({"collaborator": None})
+            return handler.send_json(profile)
+
+        if path == "/api/collaborators/ranking":
+            ranking = get_ranking_top(conn)
+            return handler.send_json(ranking)
+
+        if path == "/api/collaborators/rewards":
+            rewards = get_rewards_catalog(conn)
+            return handler.send_json(rewards)
+
+        if path == "/api/collaborators/stats":
+            stats = get_stats(conn)
+            return handler.send_json(stats)
+
+        if path == "/api/collaborators/activity-types":
+            rows = conn.execute("SELECT * FROM activity_types ORDER BY name").fetchall()
+            return handler.send_json([rowdict(r) for r in rows])
+
     return handler.error(404, "NOT_FOUND", "Ruta no encontrada")
 
 
@@ -103,25 +129,6 @@ def route_api_post(handler, path, payload):
                 (name, int(amount), method, now()),
             )
             return handler.send_json({"id": cur.lastrowid, "message": "Gracias por tu apoyo"}, 201)
-
-        if path == "/api/collaborate":
-            name = str(payload.get("name", "")).strip()
-            email = str(payload.get("email", "")).strip().lower()
-            role = str(payload.get("role", "")).strip()
-            message = str(payload.get("message", "")).strip()
-            if not name or len(name) < 2:
-                return handler.error(400, "VALIDATION", "Escribe tu nombre")
-            if not email or "@" not in email:
-                return handler.error(400, "VALIDATION", "Escribe un correo válido")
-            if not role:
-                return handler.error(400, "VALIDATION", "Selecciona un rol")
-            if len(message) > 1000:
-                return handler.error(400, "VALIDATION", "El mensaje no puede superar 1000 caracteres")
-            cur = conn.execute(
-                "INSERT INTO collaborators(name,email,role,message,created_at) VALUES(?,?,?,?,?)",
-                (name, email, role, message or None, now()),
-            )
-            return handler.send_json({"id": cur.lastrowid, "message": "Postulación recibida"}, 201)
 
     return handler.error(404, "NOT_FOUND", "Ruta no encontrada")
 

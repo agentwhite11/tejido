@@ -91,8 +91,10 @@ class Handler(SimpleHTTPRequestHandler):
             return handle_auth_login(self, data)
         if path == "/api/auth/logout":
             return handle_auth_logout(self)
-        if path in ("/api/suggestions", "/api/support", "/api/collaborate"):
+        if path in ("/api/suggestions", "/api/support"):
             return route_api_post(self, path, data)
+        if path.startswith("/api/collaborators/"):
+            return route_post(self, path, data, now)
         return route_post(self, path, data, now)
 
     def do_PUT(self):

@@ -108,8 +108,64 @@ CREATE TABLE IF NOT EXISTS sessions(
     expires_at TEXT NOT NULL
 );
 
+-- Colaboradores
+CREATE TABLE IF NOT EXISTS collaborators(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER UNIQUE NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    code TEXT UNIQUE NOT NULL,
+    points INTEGER NOT NULL DEFAULT 0,
+    level TEXT NOT NULL DEFAULT 'INICIADO',
+    active INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS collaborator_activities(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    collaborator_id INTEGER NOT NULL REFERENCES collaborators(id) ON DELETE CASCADE,
+    type TEXT NOT NULL,
+    points INTEGER NOT NULL,
+    description TEXT NOT NULL,
+    evidence_url TEXT,
+    publication_id INTEGER REFERENCES publications(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'APPROVED',
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS rewards(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    points_cost INTEGER NOT NULL,
+    category TEXT NOT NULL,
+    image TEXT,
+    stock INTEGER NOT NULL DEFAULT -1,
+    active INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS reward_redemptions(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    collaborator_id INTEGER NOT NULL REFERENCES collaborators(id),
+    reward_id INTEGER NOT NULL REFERENCES rewards(id),
+    points_cost INTEGER NOT NULL,
+    status TEXT NOT NULL DEFAULT 'PENDING',
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS activity_types(
+    type TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    default_points INTEGER NOT NULL,
+    requires_evidence INTEGER NOT NULL DEFAULT 0,
+    description TEXT
+);
+
 CREATE INDEX IF NOT EXISTS idx_publications_status ON publications(status, deleted);
 CREATE INDEX IF NOT EXISTS idx_publications_kind ON publications(kind);
 CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
 CREATE INDEX IF NOT EXISTS idx_publication_images_publication ON publication_images(publication_id, position);
 CREATE INDEX IF NOT EXISTS idx_suggestions_status ON suggestions(status);
+CREATE INDEX IF NOT EXISTS idx_collaborators_user ON collaborators(user_id);
+CREATE INDEX IF NOT EXISTS idx_collaborators_code ON collaborators(code);
+CREATE INDEX IF NOT EXISTS idx_collaborator_activities_collab ON collaborator_activities(collaborator_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_collaborator_activities_status ON collaborator_activities(status);
+CREATE INDEX IF NOT EXISTS idx_reward_redemptions_collab ON reward_redemptions(collaborator_id);

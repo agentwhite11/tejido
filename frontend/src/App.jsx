@@ -3,6 +3,7 @@ import Footer from './components/Footer.jsx';
 import HiloAssistant from './components/HiloAssistant.jsx';
 import SiteHeader from './components/SiteHeader.jsx';
 import AgendaScreen from './screens/AgendaScreen.jsx';
+import CollaboratorScreen from './screens/CollaboratorScreen.jsx';
 import ExploreScreen from './screens/ExploreScreen.jsx';
 import HomeScreen from './screens/HomeScreen.jsx';
 import MapScreen from './screens/MapScreen.jsx';
@@ -29,6 +30,7 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -36,6 +38,17 @@ export default function App() {
       window.scrollTo(0, 0);
     };
     window.addEventListener('hashchange', handleHashChange);
+
+    const token = localStorage.getItem('tejido_token');
+    if (token) {
+      fetch('/api/me', { headers: { 'Authorization': `Bearer ${token}` } })
+        .then(res => res.json())
+        .then(data => {
+          if (data.user) setUser(data.user);
+        })
+        .catch(() => {});
+    }
+
     getJson('/api/publications')
       .then(setPublications)
       .catch((loadError) => setError(loadError.message))
@@ -43,20 +56,31 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  function handleLogin(userData) {
+    setUser(userData);
+  }
+
+  function handleLogout() {
+    localStorage.removeItem('tejido_token');
+    setUser(null);
+    window.location.hash = 'inicio';
+  }
+
   const events = publications.filter((publication) => publication.kind === 'EVENTO');
   const opportunities = publications.filter((publication) => publication.kind === 'OPORTUNIDAD');
   const talents = publications.filter((publication) => publication.kind === 'TALENTO');
 
   const content = {
     inicio: <HomeScreen onExplore={() => { window.location.hash = 'explorar'; }} />,
-    explorar: <ExploreScreen publications={publications} activeKind={activeKind} onKindChange={setActiveKind} search={search} onSearchChange={setSearch} loading={loading} error={error} />,
+    explorar: <ExploreScreen publications={publications} activeKind={activeKind} onKindChange={setActiveKind} search={search} onSearchChange={setSearch} loading={loading} error={error} user={user} />,
     mapa: <MapScreen />,
     agenda: <AgendaScreen events={events} />,
     oportunidades: <OpportunitiesScreen opportunities={opportunities} />,
     talento: <TalentScreen talents={talents} />,
     guardadas: <SavedScreen />,
-    login: <LoginScreen onSuccess={() => { window.location.hash = 'inicio'; }} />,
+    colaborador: <CollaboratorScreen user={user} />,
+    login: <LoginScreen onSuccess={handleLogin} />,
   }[screen] || <NotFoundScreen />;
 
-  return <><SiteHeader onLogin={() => { window.location.hash = 'login'; }} /><main>{content}</main><Footer /><HiloAssistant publications={publications} /></>;
+  return <><SiteHeader user={user} onLogin={() => { window.location.hash = 'login'; }} onLogout={handleLogout} /><main>{content}</main><Footer /><HiloAssistant publications={publications} /></>;
 }

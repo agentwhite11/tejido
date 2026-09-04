@@ -70,3 +70,36 @@ def seed_database():
                         "INSERT INTO opportunities(publication_id, organization_name, deadline) VALUES(?,?,?)",
                         (cur.lastrowid, 'Alianza Bajo Cauca', row[9]),
                     )
+
+        # Activity types
+        activity_types = [
+            ('INTERNAL_SHARE', 'Compartir publicación', 10, 0, 'Compartir una publicación de TEJIDO en redes sociales'),
+            ('EXTERNAL_SHARE', 'Compartir en redes', 15, 1, 'Compartir contenido de TEJIDO en Instagram, Facebook, etc.'),
+            ('EXTERNAL_MENTION', 'Mencionar TEJIDO', 25, 1, 'Mencionar TEJIDO en video, radio o blog'),
+            ('EVENT_ATTEND', 'Asistir a evento', 20, 1, 'Asistir a un evento presencial de TEJIDO'),
+            ('COMMUNITY_MEET', 'Reunión comunitaria', 30, 1, 'Organizar una reunión comunitaria sobre TEJIDO'),
+            ('TEACH_TEJIDO', 'Enseñar TEJIDO', 20, 0, 'Enseñar a alguien a usar la plataforma'),
+            ('CONTENT_CREATE', 'Crear contenido', 25, 1, 'Crear contenido sobre el Bajo Cauca inspirado en TEJIDO'),
+            ('PHOTO_PLACE', 'Foto en sitio cultural', 15, 1, 'Tomar foto en un sitio cultural del Bajo Cauca'),
+            ('REFER_USER', 'Referir usuario', 50, 0, 'Registrar un nuevo usuario en TEJIDO'),
+        ]
+        conn.executemany(
+            "INSERT OR IGNORE INTO activity_types(type, name, default_points, requires_evidence, description) VALUES(?,?,?,?,?)",
+            activity_types,
+        )
+
+        # Rewards
+        rewards = [
+            ('Entrada a evento premium', 'Acceso a eventos exclusivos de TEJIDO', 200, 'EVENTO', None, 50),
+            ('Camiseta Tejido', 'Camiseta oficial del proyecto TEJido', 500, 'MERCH', None, 20),
+            ('Poster Bajo Cauca', 'Poster ilustrado del territorio', 300, 'MERCH', None, 30),
+            ('10% descuento artesanías', 'Descuento en el marketplace de artesanías', 100, 'DCTO', None, -1),
+            ('Destacado en la web', 'Tu perfil aparece destacado por 1 semana', 1000, 'DESTACADO', None, -1),
+            ('Stickers TEJIDO', 'Pack de 5 stickers con diseños del Bajo Cauca', 150, 'MERCH', None, 40),
+            ('Taller premium gratis', 'Acceso a un taller cultural exclusivo', 250, 'EVENTO', None, 15),
+            ('Mención en redes', 'TEJIDO te menciona en sus redes sociales', 400, 'DESTACADO', None, -1),
+        ]
+        conn.executemany(
+            "INSERT OR IGNORE INTO rewards(name, description, points_cost, category, image, stock) VALUES(?,?,?,?,?,?)",
+            rewards,
+        )

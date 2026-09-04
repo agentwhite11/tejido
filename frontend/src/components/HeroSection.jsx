@@ -1,13 +1,161 @@
-export default function HeroSection() {
+import { useState, useEffect, useMemo } from 'react';
+
+const testimonials = [
+  { text: "El río Cauca no solo lleva agua, lleva nuestra historia.", author: "María, Caucasia" },
+  { text: "Aquí nacen los cantos que hacen latir al Bajo Cauca.", author: "Carlos, El Bagre" },
+  { text: "Cada piedra del río guarda un secreto por contar.", author: "Ana, Zaragoza" },
+  { text: "Nuestra tierra es fértil en talento y en esperanza.", author: "Luis, Tarazá" },
+];
+
+function generateSnakePath() {
+  const curves = [];
+  const numCurves = 4 + Math.floor(Math.random() * 2);
+  let y = 280 + Math.random() * 80;
+  let x = -80;
+
+  curves.push(`M${x},${y}`);
+
+  for (let i = 0; i < numCurves; i++) {
+    const direction = i % 2 === 0 ? -1 : 1;
+    const cp1x = x + 120 + Math.random() * 60;
+    const cp1y = y + direction * (100 + Math.random() * 80);
+    const cp2x = cp1x + 100 + Math.random() * 60;
+    const cp2y = y + direction * (60 + Math.random() * 60);
+    x = cp2x + 80 + Math.random() * 40;
+    y = y + direction * (20 + Math.random() * 40);
+    curves.push(`C${cp1x},${cp1y} ${cp2x},${cp2y} ${x},${y}`);
+  }
+
+  return curves.join(' ');
+}
+
+function getEndPoint(path) {
+  const nums = path.match(/[\d.]+/g);
+  return { x: parseFloat(nums[nums.length - 2]), y: parseFloat(nums[nums.length - 1]) };
+}
+
+function getStartPoint(path) {
+  const nums = path.match(/[\d.]+/g);
+  return { x: parseFloat(nums[0]), y: parseFloat(nums[1]) };
+}
+
+export default function HeroSection({ onExplore }) {
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  const snakePath = useMemo(() => generateSnakePath(), []);
+  const headPos = useMemo(() => getEndPoint(snakePath), [snakePath]);
+  const tailPos = useMemo(() => getStartPoint(snakePath), [snakePath]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <section className="hero" id="inicio">
-      <div className="hero-copy">
-        <p className="eyebrow">Memoria, río y comunidad</p>
-        <h1>Lo nuestro tiene mucho que contar.</h1>
-        <p>Descubre historias, encuentros, oportunidades y talentos que mantienen vivo el territorio.</p>
-        <a className="primary-button" href="#explorar">Explorar Caucasia</a>
+    <section className="hero-cultural" id="inicio">
+      <div className="hero-cultural-bg" aria-hidden="true">
+        <svg className="hero-river-svg" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="riverGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#1d8fa3" stopOpacity="0.03"/>
+              <stop offset="20%" stopColor="#1d8fa3" stopOpacity="0.15"/>
+              <stop offset="80%" stopColor="#1d8fa3" stopOpacity="0.15"/>
+              <stop offset="100%" stopColor="#1d8fa3" stopOpacity="0.03"/>
+            </linearGradient>
+            <linearGradient id="riverGradInner" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#1d8fa3" stopOpacity="0"/>
+              <stop offset="20%" stopColor="#1d8fa3" stopOpacity="0.25"/>
+              <stop offset="80%" stopColor="#1d8fa3" stopOpacity="0.25"/>
+              <stop offset="100%" stopColor="#1d8fa3" stopOpacity="0"/>
+            </linearGradient>
+            <radialGradient id="headGlow">
+              <stop offset="0%" stopColor="#1d8fa3" stopOpacity="0.3"/>
+              <stop offset="100%" stopColor="#1d8fa3" stopOpacity="0"/>
+            </radialGradient>
+          </defs>
+          {/* Cuerpo de la serpiente/rio */}
+          <path
+            className="hero-snake-body"
+            d={snakePath}
+            fill="none"
+            stroke="url(#riverGrad)"
+            strokeWidth="80"
+            strokeLinecap="round"
+          />
+          {/* Linea central */}
+          <path
+            className="hero-snake-spine"
+            d={snakePath}
+            fill="none"
+            stroke="url(#riverGradInner)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeDasharray="14 9"
+          />
+          {/* Cabeza de la serpiente */}
+          <circle cx={headPos.x} cy={headPos.y} r="30" fill="url(#headGlow)"/>
+          <circle cx={headPos.x} cy={headPos.y} r="12" fill="#1d8fa3" opacity="0.35"/>
+          <circle cx={headPos.x} cy={headPos.y} r="5" fill="#1d8fa3" opacity="0.5"/>
+          {/* Ojos */}
+          <circle cx={headPos.x - 5} cy={headPos.y - 3} r="2.5" fill="#0c241e" opacity="0.5"/>
+          <circle cx={headPos.x + 5} cy={headPos.y - 3} r="2.5" fill="#0c241e" opacity="0.5"/>
+          {/* Cola */}
+          <circle cx={tailPos.x} cy={tailPos.y} r="6" fill="#1d8fa3" opacity="0.15"/>
+        </svg>
+        <div className="hero-mountain"></div>
+        <div className="hero-sun"></div>
       </div>
-      <div className="hero-stamp" aria-hidden="true">CAU<br />CASIA</div>
+      <div className="hero-cultural-content">
+        <div className="hero-cultural-badge">
+          <span className="badge-icon">~</span>
+          <span className="badge-text">Bajo Cauca Antioqueño</span>
+        </div>
+        <h1 className="hero-cultural-title">
+          Donde el río <em>cuenta</em> historias
+        </h1>
+        <p className="hero-cultural-subtitle">
+          Descubre el alma del Bajo Cauca: historias que nacen del río, 
+          encuentros que tejen comunidad, oportunidades que brotan de la tierra 
+          y talentos que brillan como el oro.
+        </p>
+        
+        <div className="hero-testimonial">
+          <p className="testimonial-text">"{testimonials[currentTestimonial].text}"</p>
+          <span className="testimonial-author">— {testimonials[currentTestimonial].author}</span>
+        </div>
+
+        <div className="hero-cultural-actions">
+          <a className="btn-primary-cultural" href="#explorar">
+            Explorar Territorio
+          </a>
+          <a className="btn-secondary-cultural" href="#agenda">
+            Próximos Eventos
+          </a>
+        </div>
+        <div className="hero-support-actions">
+          <a className="btn-donate" href="#donar">
+            <span className="btn-icon">♥</span>
+            Donar a Tejido
+          </a>
+          <a className="btn-collaborate" href="#colaborar">
+            <span className="btn-icon">★</span>
+            Colaborar
+          </a>
+        </div>
+      </div>
+      <div className="hero-cultural-visual" aria-hidden="true">
+        <div className="visual-card visual-card-1">
+          <span className="visual-text">Caucasia</span>
+        </div>
+        <div className="visual-card visual-card-2">
+          <span className="visual-text">Oro Ancestral</span>
+        </div>
+        <div className="visual-card visual-card-3">
+          <span className="visual-text">Música Viva</span>
+        </div>
+      </div>
     </section>
   );
 }
