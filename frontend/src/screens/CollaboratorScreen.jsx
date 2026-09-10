@@ -33,12 +33,18 @@ export default function CollaboratorScreen({ user }) {
     loadData();
   }, []);
 
+  function authHeaders() {
+    const token = localStorage.getItem('tejido_token');
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+  }
+
   async function loadData() {
     try {
+      const headers = authHeaders();
       const [profileRes, rewardsRes, typesRes] = await Promise.all([
-        fetch('/api/collaborators/profile'),
-        fetch('/api/collaborators/rewards'),
-        fetch('/api/collaborators/activity-types'),
+        fetch('/api/collaborators/profile', { headers }),
+        fetch('/api/collaborators/rewards', { headers }),
+        fetch('/api/collaborators/activity-types', { headers }),
       ]);
       const profileData = await profileRes.json();
       const rewardsData = await rewardsRes.json();
@@ -55,7 +61,10 @@ export default function CollaboratorScreen({ user }) {
 
   async function handleRegister() {
     try {
-      const res = await fetch('/api/collaborators/register', { method: 'POST' });
+      const res = await fetch('/api/collaborators/register', {
+        method: 'POST',
+        headers: authHeaders(),
+      });
       const data = await res.json();
       if (res.ok) {
         loadData();
@@ -73,7 +82,7 @@ export default function CollaboratorScreen({ user }) {
     try {
       const res = await fetch('/api/collaborators/report', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify(reportForm),
       });
       const data = await res.json();
@@ -97,7 +106,7 @@ export default function CollaboratorScreen({ user }) {
     try {
       const res = await fetch('/api/collaborators/redeem', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
         body: JSON.stringify({ reward_id: rewardId }),
       });
       const data = await res.json();
@@ -125,7 +134,7 @@ export default function CollaboratorScreen({ user }) {
         <div className="collab-auth-required">
           <h2>Colaboradores TEJIDO</h2>
           <p>Inicia sesión para unirte al programa de colaboradores.</p>
-          <a href="#login" className="btn-primary-cultural">Iniciar Sesión</a>
+          <a href="#login" onClick={() => sessionStorage.setItem('tejido_return_to', 'colaborador')} className="btn-primary-cultural">Iniciar Sesión</a>
         </div>
       </section>
     );

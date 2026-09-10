@@ -1,8 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Logo from './Logo.jsx';
 
 export default function SiteHeader({ user, onLogin, onLogout }) {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!showUserMenu) return;
+    function handleClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowUserMenu(false);
+      }
+    }
+    function handleHashChange() {
+      setShowUserMenu(false);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, [showUserMenu]);
 
   return (
     <header className="site-header">
@@ -15,17 +34,18 @@ export default function SiteHeader({ user, onLogin, onLogout }) {
         <a href="#oportunidades">Oportunidades</a>
         <a href="#talento">Talento</a>
         <a href="#colaborador">Colaborar</a>
+        <a href="#moneystack" className="nav-moneystack">Moneystack</a>
       </nav>
       {user ? (
-        <div className="user-menu-wrapper">
+        <div className="user-menu-wrapper" ref={menuRef}>
           <button className="user-menu-btn" onClick={() => setShowUserMenu(!showUserMenu)}>
             {user.name?.charAt(0) || '?'}
           </button>
           {showUserMenu && (
             <div className="user-dropdown">
               <span className="user-dropdown-name">{user.name}</span>
-              <a href="#colaborador">Mi Dashboard</a>
-              <button onClick={onLogout}>Cerrar Sesión</button>
+              <a href="#colaborador" onClick={() => setShowUserMenu(false)}>Mi Dashboard</a>
+              <button onClick={() => { setShowUserMenu(false); onLogout(); }}>Cerrar Sesión</button>
             </div>
           )}
         </div>

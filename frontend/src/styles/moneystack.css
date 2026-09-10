@@ -1,0 +1,506 @@
+/* ═══════════════════════════════════════════════════════════════════
+   STYLES-MONEY-STACK.CSS — Dashboard Money Stack
+   Estetica: Dark mode, terminal, verde-negro, dashboard tecnico
+   ═══════════════════════════════════════════════════════════════════ */
+
+.ms-loading {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #0a0a0a;
+  color: #fff;
+  gap: 16px;
+}
+
+.ms-loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #1a1a1a;
+  border-top-color: #00ff88;
+  border-radius: 50%;
+  animation: msSpin 0.6s linear infinite;
+}
+
+@keyframes msSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Layout ────────────────────────────────────────────────────── */
+.ms-dashboard {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #e0e0e0;
+  font-family: 'JetBrains Mono', 'DM Sans', monospace, sans-serif;
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────── */
+.ms-sidebar {
+  background: #0f0f0f;
+  border-right: 1px solid #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.ms-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px 24px;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.ms-logo {
+  width: 36px;
+  height: 36px;
+  background: #00ff88;
+  color: #0a0a0a;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.ms-sidebar-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.ms-sidebar-sub {
+  font-size: 11px;
+  color: #555;
+  margin: 2px 0 0;
+}
+
+.ms-sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ms-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  color: #666;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.ms-nav-item:hover {
+  color: #ccc;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.ms-nav-item--active {
+  color: #00ff88;
+  background: rgba(0, 255, 136, 0.08);
+}
+
+.ms-nav-icon {
+  font-size: 14px;
+  width: 20px;
+  text-align: center;
+}
+
+.ms-sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #1a1a1a;
+}
+
+.ms-back-link {
+  font-size: 12px;
+  color: #555;
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ms-back-link:hover {
+  color: #00ff88;
+}
+
+/* ── Main content ──────────────────────────────────────────────── */
+.ms-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.ms-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  border-bottom: 1px solid #1a1a1a;
+  background: rgba(10, 10, 10, 0.9);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.ms-header-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ms-header-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #00ff88;
+}
+
+.ms-status-dot {
+  width: 8px;
+  height: 8px;
+  background: #00ff88;
+  border-radius: 50%;
+  animation: msPulse 2s ease-in-out infinite;
+}
+
+@keyframes msPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.ms-content {
+  padding: 32px;
+  flex: 1;
+}
+
+/* ── Metrics grid ──────────────────────────────────────────────── */
+.ms-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.ms-metric {
+  background: #111;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ms-metric-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #555;
+}
+
+.ms-metric-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ms-metric-suffix {
+  font-size: 14px;
+  color: #555;
+  font-weight: 400;
+}
+
+.ms-metric-trend {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ms-metric-trend--up {
+  color: #00ff88;
+}
+
+.ms-metric-trend--down {
+  color: #ff4444;
+}
+
+/* ── Sections ──────────────────────────────────────────────────── */
+.ms-section {
+  margin-bottom: 40px;
+}
+
+.ms-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 20px;
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ms-section-title::before {
+  content: '';
+  width: 3px;
+  height: 18px;
+  background: #00ff88;
+  border-radius: 2px;
+}
+
+.ms-section-desc {
+  font-size: 13px;
+  color: #555;
+  margin: -12px 0 20px;
+}
+
+/* ── Progress bars ─────────────────────────────────────────────── */
+.ms-goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ms-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ms-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ms-progress-label {
+  font-size: 13px;
+  color: #888;
+}
+
+.ms-progress-value {
+  font-size: 12px;
+  color: #555;
+  font-weight: 600;
+}
+
+.ms-progress-bar {
+  height: 6px;
+  background: #1a1a1a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.ms-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Activity list ─────────────────────────────────────────────── */
+.ms-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ms-activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #111;
+  border: 1px solid #1a1a1a;
+  border-radius: 10px;
+}
+
+.ms-activity-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ms-activity-dot--green { background: #00ff88; }
+.ms-activity-dot--blue { background: #3B82F6; }
+.ms-activity-dot--gold { background: #d4a843; }
+
+.ms-activity-text {
+  flex: 1;
+  font-size: 13px;
+  color: #ccc;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ms-activity-date {
+  font-size: 11px;
+  color: #555;
+}
+
+/* ── Table ─────────────────────────────────────────────────────── */
+.ms-table {
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ms-table-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 16px;
+  padding: 14px 20px;
+  background: #111;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #555;
+}
+
+.ms-table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 16px;
+  padding: 14px 20px;
+  border-top: 1px solid #1a1a1a;
+  font-size: 13px;
+  color: #ccc;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s;
+}
+
+.ms-table-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ms-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.ms-badge--green {
+  background: rgba(0, 255, 136, 0.1);
+  color: #00ff88;
+}
+
+/* ── Stats grid ────────────────────────────────────────────────── */
+.ms-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.ms-stat-card {
+  background: #111;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ms-stat-label {
+  font-size: 12px;
+  color: #555;
+}
+
+.ms-stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ms-stat-change {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ms-stat-change--up { color: #00ff88; }
+.ms-stat-change--down { color: #ff4444; }
+
+/* ── Placeholder ───────────────────────────────────────────────── */
+.ms-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.ms-placeholder-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.ms-placeholder h3 {
+  font-size: 18px;
+  color: #fff;
+  margin: 0 0 8px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ms-placeholder p {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .ms-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .ms-sidebar {
+    display: none;
+  }
+
+  .ms-content {
+    padding: 20px;
+  }
+
+  .ms-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ms-table-header,
+  .ms-table-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ms-table-header span:nth-child(3),
+  .ms-table-header span:nth-child(4),
+  .ms-table-row span:nth-child(3),
+  .ms-table-row span:nth-child(4) {
+    display: none;
+  }
+}

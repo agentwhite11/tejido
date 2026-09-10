@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import PublicationCard from './PublicationCard.jsx';
+import { getMunicipalityFromLocation, stampMunicipality } from '../utils/passportUtils.js';
 
 const kinds = [
   ['TODOS', 'Todo'],
@@ -18,6 +20,19 @@ export default function ExploreSection({ publications, activeKind, onKindChange,
       .some((value) => value.toLowerCase().includes(term));
     return matchesKind && matchesSearch;
   });
+
+  /**
+   * Al mostrar publicaciones, sella automáticamente los municipios
+   * que tienen contenido visible. Esto construye el pasaporte del usuario.
+   */
+  useEffect(() => {
+    filtered.forEach((pub) => {
+      if (pub.location) {
+        const muni = getMunicipalityFromLocation(pub.location);
+        stampMunicipality(muni);
+      }
+    });
+  }, [filtered]);
 
   return (
     <section className="section" id="explorar">
