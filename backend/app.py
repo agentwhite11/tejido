@@ -68,7 +68,10 @@ class Handler(SimpleHTTPRequestHandler):
         if not target.exists() or target.is_dir():
             if Path(path).suffix:
                 return self.error(404, "NOT_FOUND", "Archivo no encontrado")
-            target = PUBLIC_DIR / "index.html"
+            if path.startswith("/artistas/"):
+                target = PUBLIC_DIR / "index.html"
+            else:
+                target = PUBLIC_DIR / "index.html"
         data = target.read_bytes()
         mime = mimetypes.guess_type(target.name)[0] or "application/octet-stream"
         self.send_response(200)
@@ -99,12 +102,22 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_PUT(self):
         data = self.body()
-        match = re.fullmatch(r"/api/publications/(\d+)", urlparse(self.path).path)
         if data is None:
             return
-        if not match:
-            return self.error(404, "NOT_FOUND", "Ruta no encontrada")
-        return route_put(self, int(match.group(1)), data, now)
+        path = urlparse(self.path).path
+        match = re.fullmatch(r"/api/publications/(\d+)", path)
+        if match:
+            return route_put(self, int(match.group(1)), data, now)
+        match = re.fullmatch(r"/api/artists/(\d+)", path)
+        if match:
+            return route_put_artist(self, int(match.group(1)), data, now)
+        match = re.fullmatch(r"/api/artists/(\d+)/timeline/(\d+)", path)
+        if match:
+            return route_put_artist_timeline(self, int(match.group(1)), int(match.group(2)), data)
+        match = re.fullmatch(r"/api/artists/(\d+)/media/(\d+)", path)
+        if match:
+            return route_put_artist_media(self, int(match.group(1)), int(match.group(2)), data)
+        return self.error(404, "NOT_FOUND", "Ruta no encontrada")
 
     def do_PATCH(self):
         data = self.body()

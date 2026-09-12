@@ -508,6 +508,436 @@ footer > div > b { margin-bottom: 7px; }
   font-weight: 700;
 }
 
+/* =========================================
+   HERO INTERACTIVO — HILO COMO ENTRADA
+   ========================================= */
+
+.hero-interactive {
+  align-items: center;
+  background: linear-gradient(160deg, var(--cream-warm, #faf3e6) 0%, rgba(212, 168, 67, 0.06) 50%, rgba(29, 143, 163, 0.04) 100%);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: 100px 7vw 60px;
+  position: relative;
+  text-align: center;
+  transition: background 1.2s ease;
+}
+
+.hero-interactive-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-interactive-bg .hero-river-svg {
+  position: absolute;
+  width: 130%;
+  height: 130%;
+  left: -15%;
+  top: -15%;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.hero-bg-river .hero-interactive-bg .hero-river-svg,
+.hero-bg-muni-caceres .hero-interactive-bg .hero-river-svg,
+.hero-bg-muni-nechi .hero-interactive-bg .hero-river-svg {
+  opacity: 1;
+}
+
+.hero-river-path {
+  animation: heroRiverFlow 14s ease-in-out infinite;
+}
+
+.hero-river-spine {
+  animation: heroRiverFlow 14s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
+
+@keyframes heroRiverFlow {
+  0%, 100% { stroke-dashoffset: 0; }
+  50% { stroke-dashoffset: -52; }
+}
+
+.hero-bg-sun {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e8c252 0%, #d85b36 100%);
+  right: 12%;
+  top: 8%;
+  box-shadow: 0 0 100px rgba(232, 194, 82, 0.25);
+  animation: heroSunGlow 6s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes heroSunGlow {
+  0%, 100% { box-shadow: 0 0 100px rgba(232, 194, 82, 0.25); transform: scale(1); }
+  50% { box-shadow: 0 0 160px rgba(232, 194, 82, 0.35); transform: scale(1.06); }
+}
+
+.hero-gold-particles {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #d4a843;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.hero-particle.p1 { animation: heroFloat1 8s ease-in-out 0.2s infinite; left: 15%; top: 30%; }
+.hero-particle.p2 { animation: heroFloat2 9s ease-in-out 0.6s infinite; left: 25%; top: 60%; }
+.hero-particle.p3 { animation: heroFloat1 7s ease-in-out 1.0s infinite; left: 40%; top: 20%; }
+.hero-particle.p4 { animation: heroFloat2 10s ease-in-out 0.4s infinite; left: 55%; top: 70%; }
+.hero-particle.p5 { animation: heroFloat1 8.5s ease-in-out 1.2s infinite; left: 70%; top: 35%; }
+.hero-particle.p6 { animation: heroFloat2 7.5s ease-in-out 0.8s infinite; left: 80%; top: 55%; }
+.hero-particle.p7 { animation: heroFloat1 9.5s ease-in-out 0.3s infinite; left: 35%; top: 80%; }
+.hero-particle.p8 { animation: heroFloat2 8s ease-in-out 1.4s infinite; left: 65%; top: 15%; }
+
+@keyframes heroFloat1 {
+  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  25% { opacity: 0.5; }
+  50% { opacity: 0.3; transform: translate(15px, -25px) scale(1.4); }
+  75% { opacity: 0.5; }
+}
+
+@keyframes heroFloat2 {
+  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  25% { opacity: 0.4; }
+  50% { opacity: 0.25; transform: translate(-12px, -30px) scale(1.3); }
+  75% { opacity: 0.4; }
+}
+
+.hero-interactive-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.hero-interactive-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-hilo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.hero-hilo-avatar-wrapper {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(12, 36, 30, 0.18),
+    0 0 0 4px rgba(255, 255, 255, 0.8);
+  margin-bottom: 28px;
+  animation: heroHiloFloat 3.6s ease-in-out infinite;
+  background: var(--cream, #f3e4c8);
+}
+
+.hero-hilo-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes heroHiloFloat {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+
+.hero-hilo-message {
+  font-size: clamp(20px, 2.8vw, 28px);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.hero-options {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 36px;
+  flex-wrap: wrap;
+}
+
+.hero-option {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  border: 2px solid transparent;
+  border-radius: 22px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 24px 28px;
+  text-align: center;
+  min-width: 170px;
+  transition: all 0.35s cubic-bezier(.34, 1.56, .64, 1);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroOptionIn 0.5s cubic-bezier(.34, 1.56, .64, 1) forwards;
+}
+
+@keyframes heroOptionIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-option:hover {
+  border-color: var(--option-color, var(--river, #1d8fa3));
+  transform: translateY(-8px) scale(1.03);
+  box-shadow:
+    0 20px 50px rgba(18, 60, 52, 0.12),
+    0 0 0 1px var(--option-color, rgba(29, 143, 163, 0.1));
+}
+
+.hero-option:active {
+  transform: translateY(-4px) scale(1.01);
+}
+
+.hero-option-icon {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.hero-option-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.hero-option-sub {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted, #66746f);
+  line-height: 1.3;
+}
+
+.hero-stats {
+  align-items: center;
+  border-top: 1px solid rgba(23, 58, 49, 0.08);
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+  margin-top: 48px;
+  padding-top: 28px;
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-stat-number {
+  color: var(--ink);
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.hero-stat-label {
+  color: var(--muted, #66746f);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hero-stat-divider {
+  background: var(--line, #ddd5c7);
+  height: 40px;
+  width: 1px;
+}
+
+.hero-explore-cta {
+  margin-top: 28px;
+}
+
+.hero-back-btn {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(23, 58, 49, 0.12);
+  border-radius: 999px;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.hero-back-btn:hover {
+  background: white;
+  box-shadow: 0 4px 16px rgba(23, 58, 49, 0.1);
+}
+
+.hero-muni-info {
+  margin-top: 24px;
+}
+
+.hero-muni-tags {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-muni-tag {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid;
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+}
+
+.hero-muni-pubs {
+  margin-top: 32px;
+  max-width: 700px;
+  width: 100%;
+}
+
+.hero-muni-pubs-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--muted, #66746f);
+  margin: 0 0 16px;
+}
+
+.hero-muni-pubs-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.hero-muni-pub-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(23, 58, 49, 0.06);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.hero-muni-pub-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(18, 60, 52, 0.1);
+  border-color: rgba(29, 143, 163, 0.15);
+}
+
+.hero-muni-pub-kind {
+  color: var(--sunset, #d85b36);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hero-muni-pub-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 4px 0 6px;
+}
+
+.hero-muni-pub-summary {
+  font-size: 12px;
+  color: var(--muted, #66746f);
+  line-height: 1.4;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Background scene variants */
+.hero-bg-river {
+  background: linear-gradient(160deg, #faf3e6 0%, rgba(29, 143, 163, 0.06) 50%, rgba(212, 168, 67, 0.04) 100%);
+}
+
+.hero-bg-people {
+  background: linear-gradient(160deg, #faf3e6 0%, rgba(45, 90, 61, 0.06) 50%, rgba(117, 183, 155, 0.04) 100%);
+}
+
+.hero-bg-music {
+  background: linear-gradient(160deg, #faf3e6 0%, rgba(138, 79, 125, 0.06) 50%, rgba(232, 93, 58, 0.04) 100%);
+}
+
+.hero-bg-muni-caucasia {
+  background: linear-gradient(160deg, #faf3e6 0%, rgba(212, 168, 67, 0.1) 50%, rgba(232, 194, 82, 0.05) 100%);
+}
+
+.hero-bg-muni-caceres {
+  background: linear-gradient(160deg, #faf3e6 0%, rgba(29, 143, 163, 0.1) 50%, rgba(15, 107, 122, 0.05) 100%);
+}
+
+.hero-bg-muni-taraza {
+  background: linear-gradient(160deg, #faf3e6 0%, rgba(117, 183, 155, 0.1) 50%, rgba(45, 90, 61, 0.05) 100%);
+}
+
+.hero-bg-muni-nechi {
+  background: linear-gradient(160deg, #faf3e6 0%, rgba(15, 107, 122, 0.1) 50%, rgba(29, 143, 163, 0.05) 100%);
+}
+
+.hero-bg-muni-elbagre {
+  background: linear-gradient(160deg, #faf3e6 0%, rgba(196, 113, 58, 0.1) 50%, rgba(212, 168, 67, 0.05) 100%);
+}
+
+.hero-bg-muni-zaragoza {
+  background: linear-gradient(160deg, #faf3e6 0%, rgba(107, 58, 125, 0.1) 50%, rgba(138, 79, 125, 0.05) 100%);
+}
+
+/* Responsive hero interactivo */
+@media (max-width: 768px) {
+  .hero-interactive { padding: 80px 5vw 40px; min-height: auto; }
+  .hero-hilo-avatar-wrapper { width: 140px; height: 140px; }
+  .hero-hilo-message { font-size: 20px; }
+  .hero-options { gap: 12px; }
+  .hero-option { min-width: 140px; padding: 18px 20px; }
+  .hero-option-icon { font-size: 26px; }
+  .hero-option-label { font-size: 14px; }
+  .hero-stats { gap: 16px; }
+  .hero-stat-number { font-size: 26px; }
+  .hero-bg-sun { width: 140px; height: 140px; right: 5%; top: 5%; }
+  .hero-muni-pubs-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .hero-options { flex-direction: column; align-items: center; }
+  .hero-option { width: 100%; max-width: 280px; }
+  .hero-back-btn { bottom: 12px; left: 12px; padding: 8px 16px; font-size: 13px; }
+}
+
 /* Section Badge */
 .section-badge {
   background: rgba(29, 143, 163, 0.1);

@@ -1,4 +1,4 @@
-import HeroSection from '../components/HeroSection.jsx';
+import HeroInteractive from '../components/HeroInteractive.jsx';
 import PassportSection from '../components/PassportSection.jsx';
 import TimelineSection from '../components/TimelineSection.jsx';
 import HomeFeaturedArtist from './HomeFeaturedArtist.jsx';
@@ -7,7 +7,7 @@ import HomeMapSection from './HomeMapSection.jsx';
 export default function HomeScreen({ onExplore, publications = [] }) {
   return (
     <>
-      <HeroSection onExplore={onExplore} />
+      <HeroInteractive onExplore={onExplore} publications={publications} />
 
       <HomeFeaturedArtist />
 
