@@ -151,7 +151,7 @@ export default function App() {
     <>
       {!isArtistRoute && (
         <>
-          <SiteHeader user={user} onLogin={() => { sessionStorage.setItem('tejido_return_to', getRoute().screen); window.location.hash = 'login'; }} onLogout={handleLogout} />
+          <SiteHeader user={user} isMoneystack={route.screen === 'moneystack'} onLogin={() => { sessionStorage.setItem('tejido_return_to', getRoute().screen); window.location.hash = 'login'; }} onLogout={handleLogout} />
           <main>{content}</main>
           <Footer />
           <HiloAssistant publications={publications} />

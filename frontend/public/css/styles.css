@@ -130,6 +130,11 @@ a{
   background:var(--yellow); font-size:14px;
   font-weight:800
 }
+.white-logo{
+  height:38px; width:38px; border-radius:50%;
+  object-fit:cover; flex:none;
+  border:1px solid rgba(18,60,52,.15)
+}
 /* 3. Portada principal */
 .hero{
   min-height:690px; padding:70px 7vw 60px; display:grid; grid-template-columns:1.02fr .98fr; gap:5vw;

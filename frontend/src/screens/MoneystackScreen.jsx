@@ -17,9 +17,18 @@ export default function MoneystackScreen() {
   // Cargar artistas al montar el componente
   useEffect(() => {
     fetch('/api/artists')
-      .then(res => res.json())
-      .then(data => setArtists(data))
-      .catch(err => console.error('Error loading artists:', err))
+      .then((res) => {
+        if (!res.ok) return [];
+        return res.json();
+      })
+      .then((data) => {
+        const list = Array.isArray(data) ? data : Array.isArray(data?.artists) ? data.artists : [];
+        setArtists(list);
+      })
+      .catch((err) => {
+        console.error('Error loading artists:', err);
+        setArtists([]);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -49,9 +58,18 @@ export default function MoneystackScreen() {
             <span className="moneystack-tag">Independiente</span>
           </div>
         </div>
-        {/* Logo placeholder — reemplazar con logo real */}
-        <div className="moneystack-logo-placeholder">
-          <span>M</span>
+
+        <div className="moneystack-logo-placeholder" aria-label="Logo de MoneyStack">
+          <img
+            className="moneystack-logo-image"
+            src="/images/moneystack/logo.png"
+            alt="Logo de MoneyStack"
+            onError={(event) => {
+              event.currentTarget.style.display = 'none';
+              event.currentTarget.parentElement?.classList.add('moneystack-logo-fallback-visible');
+            }}
+          />
+          <span className="moneystack-logo-fallback">MS</span>
         </div>
       </div>
 
